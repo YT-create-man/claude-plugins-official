@@ -1000,7 +1000,8 @@ bot.catch(err => {
 // On unrecoverable conditions (persistent 409 Conflict or 401 Unauthorized),
 // exit the entire process rather than just returning from the polling task.
 // A bare `return` left the MCP server alive with no poller, and orphaned
-// `bun server.ts` siblings kept their getUpdates loop hot at ~100% CPU.
+// `bun server.ts` siblings could keep competing for getUpdates and
+// consuming CPU until killed manually.
 function exitPollingFailure(message: string, code = 1): never {
   process.stderr.write(message)
   try {
